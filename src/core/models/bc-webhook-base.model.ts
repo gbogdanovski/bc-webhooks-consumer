@@ -4,5 +4,5 @@ export interface BcWebHookBaseModel<T> {
     hash: string;
     created_at: number;
     producer: string;
-    data: T
+    data: T;
 }
