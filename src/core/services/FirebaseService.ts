@@ -26,7 +26,7 @@ export class FirebaseService {
         if (firebase.apps.length === 0) {
             if (config.gcpAuthorize.apiKeyJson) {
                 firebase.initializeApp({
-                    credential: firebase.credential.cert(JSON.parse(config.gcpAuthorize.apiKeyJson)),
+                    serviceAccountId: "bc-webhooks-db-service-account@bc-webhooks-receiver.iam.gserviceaccount.com"
                 });
             } else {
                 firebase.initializeApp();
@@ -48,8 +48,10 @@ export class FirebaseService {
             });
             const shopPromises = await Promise.all(shops.map(shop => shop));
             this.shopWebhooksData = shopPromises?.map((x) => { return { webhooksEnabled: x.webhooksEnabled, storeHash: x.storeHash, webhooksToken: x.webhooksToken }; });
-            console.log(this.shopWebhooksData);
+            //console.log(this.shopWebhooksData);
         });
+
+        this.firestoreDb?.collection("shops").add({ "test": "test" });
     }
 
     async getWebhooksTokens(): Promise<ShopModel[]> {
