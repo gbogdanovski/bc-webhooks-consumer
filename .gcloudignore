@@ -1,0 +1,7 @@
+# Exclude compiled .js files
+*.js
+
+# Exclude dependencies
+node_modules/
+
+firestore_data/

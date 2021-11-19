@@ -22,6 +22,7 @@ const validateWebhookData = async (req: Request) => {
     const body: BcWebHookBaseModel<BcWebHookDataBaseModel> = req.body;
     const aecHeaderValue = req.headers[String(config.webhookCustomHeaderName).toLowerCase()];
     const scopeType = extractWebhookData(body);
+    const shopHash = await firebaseService.getShops();
     const shops = await firebaseService.shopWebhooksData;
 
     if (aecHeaderValue && shops.find(x => x.webhooksToken === aecHeaderValue)) {

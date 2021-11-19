@@ -1,0 +1,10 @@
+node_modules
+firestore_data
+npm-debug.log
+.firebaserc
+firebase.json
+firebase.indexes.json
+firestore.rules
+firestore-debug.log
+serviceAccountKey.json
+ui-debug.log
