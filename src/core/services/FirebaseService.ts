@@ -30,32 +30,42 @@ export class FirebaseService {
      * All changes will be stored in shopWebhooksData array automatically.
      */
     async attachListener() {
-        this.db.collection(this.collectionName).onSnapshot(async (querySnapshot) => {
-            const shops: Promise<ShopModel>[] = [];
-            querySnapshot.forEach(doc => {
-                shops.push(this.getShop(doc.id));
-            });
-            const shopPromises = await Promise.all(shops.map(shop => shop));
-            this.shopWebhooksData = shopPromises?.map((x) => {
+        this.db.collection(this.collectionName).onSnapshot(async (snapshot) => {
+            let result = snapshot?.docs.map(doc => doc.data());
+            if (result === undefined) {
+                return Promise.reject(`Shops were not found`);
+            }
+            this.shopWebhooksData = result?.map((x) => {
                 return {
                     webhooksEnabled: x.webhooksEnabled,
                     storeHash: x.storeHash,
                     webhooksToken: x.webhooksToken
                 };
             });
-            console.log(this.shopWebhooksData);
+            return this.shopWebhooksData;
         }, (error) => {
             console.error("Firebase collection listener error: " + error);
         });
     }
 
+    /**
+     * Get all shops from firebase
+     * All changes will be stored in shopWebhooksData array.
+     */
     async getShops() {
         const snapshot = await this.db.collection(this.collectionName).get();
-        const result = snapshot?.docs.map(doc => doc.data());
+        let result = snapshot?.docs.map(doc => doc.data());
         if (result === undefined) {
             return Promise.reject(`Shops were not found`);
         }
-        return result as ShopModel[];
+        this.shopWebhooksData = result?.map((x) => {
+            return {
+                webhooksEnabled: x.webhooksEnabled,
+                storeHash: x.storeHash,
+                webhooksToken: x.webhooksToken
+            };
+        });
+        return this.shopWebhooksData;
     }
 
     async getShop(shopName: string) {

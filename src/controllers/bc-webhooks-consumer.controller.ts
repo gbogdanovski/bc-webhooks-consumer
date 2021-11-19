@@ -10,9 +10,8 @@ const firebaseService = new FirebaseService();
 
 bcWebhooksConsumerController.post("/", async (req: Request, res: Response) => {
     try {
-        if (!req.body) throw new Error("No body found in request");
-        validateWebhookData(req);
-        res.status(200).send();
+        if (!req.body || Object.keys(req.body).length === 0) throw new Error("No body found in request");
+        res.status(200).send(await validateWebhookData(req));
     } catch (e: any) {
         res.status(500).send(e.message);
     }
@@ -22,13 +21,12 @@ const validateWebhookData = async (req: Request) => {
     const body: BcWebHookBaseModel<BcWebHookDataBaseModel> = req.body;
     const aecHeaderValue = req.headers[String(config.webhookCustomHeaderName).toLowerCase()];
     const scopeType = extractWebhookData(body);
-    const shopHash = await firebaseService.getShops();
-    const shops = await firebaseService.shopWebhooksData;
+    const shops = await firebaseService.getShops();
 
     if (aecHeaderValue && shops.find(x => x.webhooksToken === aecHeaderValue)) {
-        const shop = shops.find(x => x.webhooksToken === aecHeaderValue);
+        const shop = shops.find(x => x.webhooksToken === aecHeaderValue && x.storeHash === scopeType.storeHash);
         console.log(body);
-        //console.log(`Scope type: ${scopeType.scopeType} with header value: ${aecHeaderValue} and for shop hash: ${shop?.storeHash} and hook hash ${body.hash}`);
+        return { shop, header: aecHeaderValue, scopeType: scopeType, body };
     }
     else {
         console.log("Invalid token");

@@ -19,4 +19,5 @@ app.listen(PORT, () => {
 });
 
 const firebaseService = new FirebaseService();
+firebaseService.getShops();
 firebaseService.attachListener();
