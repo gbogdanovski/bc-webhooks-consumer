@@ -1,14 +1,14 @@
 {
   "name": "bc-webhooks-consumer",
-  "version": "0.0.2",
-  "description": "",
+  "version": "0.0.3",
+  "description": "BC webhooks consumer app",
   "scripts": {
-    "start": "npm run build && node ./src/server.js",
+    "start": "npm run build && node ./dist/server.js",
     "build": "tsc -p .",
     "dev": "ts-node-dev --respawn --pretty --transpile-only src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Attraqt.io",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/firestore": "^4.15.1",

@@ -1,5 +1,6 @@
 FROM node:14-slim
 WORKDIR /app
+# COPY serviceAccountKey.json .
 COPY package.json .
 COPY package-lock.json .
 RUN npm install
@@ -16,3 +17,5 @@ ENV KONG_URL=""
 
 # CIDP api url
 ENV CIDP_URL=""
+
+# ENV GOOGLE_APPLICATION_CREDENTIALS="serviceAccountKey.json"
