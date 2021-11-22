@@ -4,7 +4,6 @@ import helmet from "helmet";
 import { bcWebhooksConsumerController } from "./controllers/bc-webhooks-consumer.controller";
 import { errorHandlerMiddleware } from "./core/middleware/error.middleware";
 import { testController } from "./controllers/test.controller";
-import { FirebaseService } from "./core/services/FirebaseService";
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -17,7 +16,3 @@ app.use(errorHandlerMiddleware);
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
-
-const firebaseService = new FirebaseService();
-firebaseService.getShops();
-firebaseService.attachListener();

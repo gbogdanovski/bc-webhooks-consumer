@@ -2,6 +2,6 @@ node_modules
 .env
 package-lock.json
 src/core/common/config.ts
-gcp-service-account.json
+serviceAccountKey.json
 firestore_data
 dist
