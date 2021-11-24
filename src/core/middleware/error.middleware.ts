@@ -1,8 +1,8 @@
-import HttpException from "../models/http-exception.model";
+import HttpExceptionModel from "../models/http-exception.model";
 import { Request, Response, NextFunction } from "express";
 
 export const errorHandlerMiddleware = (
-    error: HttpException,
+    error: HttpExceptionModel,
     request: Request,
     response: Response,
     next: NextFunction

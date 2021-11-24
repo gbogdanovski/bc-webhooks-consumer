@@ -7,7 +7,7 @@ RUN npm install
 COPY . ./
 EXPOSE 80
 CMD ["npm", "start" ]
-ENV PORT=8080
+ENV PORT=8000
 
 # The name of the header that BC webhook will hold the Atraqt token value
 ENV WEBHOOK_CUSTOM_HEADER_NAME="Attraqt-Access-Token"
@@ -18,4 +18,6 @@ ENV KONG_URL=""
 # CIDP api url
 ENV CIDP_URL=""
 
-# ENV GOOGLE_APPLICATION_CREDENTIALS="serviceAccountKey.json"
+ENV KEYCLOAK_URL="http://iam-dev.attraqt.io/auth/realms/master/protocol/openid-connect/token"
+ENV KEYCLOAK_CLIENT_ID="attraqt-aec"
+ENV KEYCLOAK_CLIENT_SECRET="917b4372-e40e-44fb-b3dd-4223f8c87ba1"

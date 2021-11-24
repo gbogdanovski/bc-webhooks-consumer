@@ -20,13 +20,13 @@ bcWebhooksConsumerController.post("/", async (req: Request, res: Response) => {
 const validateWebhookData = async (req: Request) => {
     const body: BcWebHookBaseModel<BcWebHookDataBaseModel> = req.body;
     const aecHeaderValue = req.headers[String(config.webhookCustomHeaderName).toLowerCase()];
-    const scopeType = extractWebhookData(body);
+    const webhookData = extractWebhookData(body);
     const shops = await firebaseService.getShops();
 
     if (aecHeaderValue && shops.find(x => x.webhooksToken === aecHeaderValue)) {
-        const shop = shops.find(x => x.webhooksToken === aecHeaderValue && x.storeHash === scopeType.storeHash);
+        const shop = shops.find(x => x.webhooksToken === aecHeaderValue && x.storeHash === webhookData.storeHash);
         console.log(body);
-        return { shop, header: aecHeaderValue, scopeType: scopeType, body };
+        return { shop, header: aecHeaderValue, scopeType: webhookData, body };
     }
     else {
         console.log("Invalid token");

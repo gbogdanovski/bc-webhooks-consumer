@@ -1,5 +1,4 @@
 import { Firestore, setLogFunction } from "@google-cloud/firestore";
-// import config from "../common/config";
 import { ShopModel } from "../models/shop.model";
 
 /**

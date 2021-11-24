@@ -4,7 +4,7 @@ export const testController = express.Router();
 
 testController.get("/", async (req: Request, res: Response) => {
     try {
-        res.status(200).send(process.env);
+        res.status(200).send("BC app webhooks consumer");
     } catch (e: any) {
         res.status(500).send(e.message);
     }
