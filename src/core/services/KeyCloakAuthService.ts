@@ -3,16 +3,16 @@ import config from '../common/config';
 import { KeyCloakTokenModel } from '../models/key-cloak-token.model';
 
 /**
- * KeycloakService class is used for generating access token for sending data to CIDP.
+ * KeycloakAuthService class is used for generating access token for sending data to CIDP.
  */
-export class KeycloakService {
+export class KeycloakAuthService {
     constructor() {
-        if (KeycloakService.instance) {
-            return KeycloakService.instance;
+        if (KeycloakAuthService.instance) {
+            return KeycloakAuthService.instance;
         }
-        KeycloakService.instance = this;
+        KeycloakAuthService.instance = this;
     }
-    private static instance: KeycloakService = new KeycloakService(); //singleton instance
+    private static instance: KeycloakAuthService = new KeycloakAuthService(); //singleton instance
     public keycloakToken?: KeyCloakTokenModel = { isTokenValid: false }
     private basicAuthHeaderValue = Buffer.from(config.keycloakClientId + ':' + config.keycloakClientSecret).toString('base64');
 
@@ -63,7 +63,7 @@ export class KeycloakService {
             const result = await getToken.json();
             this.keycloakToken = result;
             this.keycloakToken!.isTokenValid = true;
-            return Promise.resolve(result);
+            return Promise.resolve(this.keycloakToken);
         }
         catch (error) {
             console.log("Error getting token from keycloak", error);

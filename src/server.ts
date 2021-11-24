@@ -4,10 +4,10 @@ import helmet from "helmet";
 import { bcWebhooksConsumerController } from "./controllers/bc-webhooks-consumer.controller";
 import { errorHandlerMiddleware } from "./core/middleware/error.middleware";
 import { testController } from "./controllers/test.controller";
-import { KeycloakService } from "./core/services/KeyCloakAuthService";
+import { KeycloakAuthService } from "./core/services/KeyCloakAuthService";
 
-const keycloakService = new KeycloakService();
-keycloakService.doAuth();
+const keycloakAuthService = new KeycloakAuthService();
+keycloakAuthService.doAuth();
 
 const PORT = process.env.PORT || 8000;
 const app = express();
