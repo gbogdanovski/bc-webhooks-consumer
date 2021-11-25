@@ -9,3 +9,5 @@ firestore-debug.log
 serviceAccountKey.json
 ui-debug.log
 .env
+.env_example
+Dockerfile_example
