@@ -1,11 +1,15 @@
 # Bigcommerce Webhooks Consumer APP
 
-Its a NodeJS app that is receiving BC webhooks payload, validates it and sends it to AEC and CIDP.
+Its a NodeJS app that will receive BC webhooks payload, validates it and sends it to AEC via Kafka topic and CIDP.
 
-### - Dependencies:
+### - Requirements:
 
 - Firebase on Google Cloud or local running emulator
 - Keycloak credentials for getting access token used for sending data to CIDP
+- NgRok for exposing https endpoint from your local running instance
+- No operating system dependencies
+
+## Description
 
 start ngrok: `ngrok http 8000`
 start local firebase emulator: `firebase emulators:start --project bc-webhooks-consumer --import=./firestore_data --export-on-exit`
