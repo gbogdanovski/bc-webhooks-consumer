@@ -6,7 +6,7 @@
 NodeJS application written with TypeScript ready for Docker and Google Cloud Run, made for consuming BigCommerce webhooks events and shipping that data to external services.
 </p><br>
 
-> ## **Requirements:**
+> ## Requirements:
 
 - Firebase on Google Cloud or local running emulator
   - [install firebase on your local](https://firebase.google.com/docs/cli#install_the_firebase_cli)
@@ -17,7 +17,7 @@ NodeJS application written with TypeScript ready for Docker and Google Cloud Run
 - No operating system dependencies
   <br><br>
 
-> ## **App Flow**
+> ## App Flow
 
 With initialization, the app will:
 
@@ -42,7 +42,7 @@ There are 2 external endpoints that will receive data from this app:
 This decision is made in the controller of the app called [bcWebhooksConsumerController](src/controllers/bc-webhooks-consumer.controller.ts) in the function called `payloadRouter`
 </p><br>
 
-> ## **Firebase on Google Cloud or local emulator**
+> ## Firebase on Google Cloud or local emulator
 
 The development is possible with these two options, cloud or local Firebase.
 
@@ -53,33 +53,25 @@ If you decide to use the locally running emulator, which is preferred and way mo
 This command import some initial data and it will save all changes that were made in the db after stopping it with `ctrl+c` in the terminal where it was started.
 </p>
 
-<br><br>
-
 #### **_NOTE: If code that id requiring service account json file to start Firestore is deployed on Google Cloud Run, you may experience issues starting the app_**
 
 <br><br>
 
-> ## **Deploy on Google Cloud**
+> ## Deploy on Google Cloud
 
 In order to deploy this app to Google Cloud Run, you will have to follow [these steps](https://cloud.google.com/sdk/docs/quickstart)
 After finishing the initial requirements from GCP by running `gcloud init` in terminal, next step is to deploy the app to Google Cloud Run by executing this commands in your terminal:
 
-- `gcloud run deploy --source .`
+- open new terminal and run: `gcloud run deploy --source .`
 - when gcloud ask for name: `bc-webhooks-consumer-api`
 - and finally the region: `15` or europe-west2 = London
 
----
+<br/>
+<br/>
 
-start ngrok: `ngrok http 8000`
-start local firebase emulator: `firebase emulators:start --project bc-webhooks-consumer --import=./firestore_data --export-on-exit`
-deploy using this manual: `https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs`
+> ## Other useful commands
 
-test the docker on your local docker: `docker build -t bc-webhooks-consumer-api:prod .`
-run the docker image: `docker run -p 8000:8000 --name bc-webhooks-consumer-container -d bc-webhooks-consumer-api:prod`
-
-local docker keycloack server following this manual: `https://www.keycloak.org/getting-started/getting-started-docker`
-
-// keycloak url: `http://localhost:8080/auth/realms/bc-app-realm`
-// keycloak realm name: `bc-app-realm`
-// keycloak username: `bc_app_keycloak_user`
-// keycloak password: `bc_app_keycloak_user`
+- start ngrok: `ngrok http 8000`
+- test the docker on your local docker: `docker build -t bc-webhooks-consumer-api:prod .`
+- run the docker image: `docker run -p 8000:8000 --name bc-webhooks-consumer-container -d bc-webhooks-consumer-api:prod`
+- local docker keycloack server following this manual: `https://www.keycloak.org/getting-started/getting-started-docker`
