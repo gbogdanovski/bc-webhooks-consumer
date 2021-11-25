@@ -7,3 +7,4 @@ firestore_data
 firestore-debug.log
 ui-debug.log
 dist
+Dockerfile

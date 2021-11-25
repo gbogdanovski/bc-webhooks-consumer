@@ -1,0 +1,18 @@
+# KONG api url
+KONG_URL=
+
+# CIDP api url
+CIDP_URL=
+
+# Optional port that will be used by the app to run locally. If not specified, the app will run on port 8080.
+PORT=8000
+
+# Optional Emulator settings. Project must be defined to use the emulator.
+FIRESTORE_EMULATOR_HOST=localhost:9090
+
+# The name of the header that BC webhook will hold the Atraqt token value
+WEBHOOK_CUSTOM_HEADER_NAME=Attraqt-Access-Token
+
+KEYCLOAK_URL=
+KEYCLOAK_CLIENT_ID=
+KEYCLOAK_CLIENT_SECRET=

@@ -1,3 +1,12 @@
+# Bigcommerce Webhooks Consumer APP
+
+Its a NodeJS app that is receiving BC webhooks payload, validates it and sends it to AEC and CIDP.
+
+### - Dependencies:
+
+- Firebase on Google Cloud or local running emulator
+- Keycloak credentials for getting access token used for sending data to CIDP
+
 start ngrok: `ngrok http 8000`
 start local firebase emulator: `firebase emulators:start --project bc-webhooks-consumer --import=./firestore_data --export-on-exit`
 deploy using this manual: `https://cloud.google.com/run/docs/quickstarts/build-and-deploy/nodejs`
@@ -7,7 +16,8 @@ run the docker image: `docker run -p 8000:8000 --name bc-webhooks-consumer-conta
 
 deploy on gcloud:
 
-- first init gcloud: `gcloud init`
+- first download and install gcloud: `https://cloud.google.com/sdk/docs/quickstart?authuser=1`
+- next init gcloud: `gcloud init`
 - run in terminal: `gcloud run deploy --source .`
 - set the name to: `bc-webhooks-consumer-api`
 - for region choose: `15` - europe-west2 = London

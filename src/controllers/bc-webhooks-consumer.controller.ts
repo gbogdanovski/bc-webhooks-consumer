@@ -47,5 +47,5 @@ const payloadRouter = async (webhookPayload: BcWebhookBaseModel, idPayload: BcWe
     else {
         console.log("send event to AEC");
     }
-    //console.log(keycloakAuthService.keycloakToken?.access_token);
+    console.log(keycloakAuthService.keycloakToken?.expires_in);
 }
