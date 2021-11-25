@@ -52,7 +52,7 @@ export class KeycloakAuthService {
 
     private async getToken(): Promise<KeyCloakTokenModel | undefined> {
         try {
-            const getToken = await fetch(config.keycloakUrl, {
+            const getToken = await fetch(String(config.keycloakUrl), {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',

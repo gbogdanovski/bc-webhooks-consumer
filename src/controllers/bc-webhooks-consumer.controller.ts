@@ -25,17 +25,17 @@ const validateWebhookData = async (req: Request) => {
     const aecHeaderValue = req.headers[String(config.webhookCustomHeaderName).toLowerCase()];
     if (!aecHeaderValue) throw new Error("No AEC header found in request");
 
-    const idPalyload = extractWebhookData(webhookPayload);
-    const shops = await firebaseService.getShops();
-    const isValidShop = shops.find(x => x.webhooksToken === aecHeaderValue && x.storeHash === idPalyload.storeHash)
+    const idPayload = extractWebhookData(webhookPayload);
+
+    const isValidShop = (firebaseService.shopWebhooksData ?? await firebaseService.getShops()).find(x => x.webhooksToken === aecHeaderValue && x.storeHash === idPayload.storeHash)
 
     if (isValidShop) {
-        payloadRouter(webhookPayload, idPalyload);
-        return { isValidShop, webhookPayload, idPalyload };
+        payloadRouter(webhookPayload, idPayload);
+        return { isValidShop, webhookPayload, idPayload: idPayload };
     }
     else {
         console.log("Invalid token");
-        throw new Error(`The shop with store hash '${idPalyload.storeHash}' was not found in firebase collection`);
+        throw new Error(`The shop with store hash '${idPayload.storeHash}' was not found in firebase collection`);
     }
 }
 
@@ -47,5 +47,5 @@ const payloadRouter = async (webhookPayload: BcWebhookBaseModel, idPayload: BcWe
     else {
         console.log("send event to AEC");
     }
-    //console.log(keycloakAuthService.keycloakToken?.access_token);
+    console.log(keycloakAuthService.keycloakToken?.expires_in);
 }

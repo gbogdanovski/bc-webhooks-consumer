@@ -5,9 +5,13 @@ import { bcWebhooksConsumerController } from "./controllers/bc-webhooks-consumer
 import { errorHandlerMiddleware } from "./core/middleware/error.middleware";
 import { testController } from "./controllers/test.controller";
 import { KeycloakAuthService } from "./core/services/KeyCloakAuthService";
+import { FirebaseService } from "./core/services/FirebaseService";
 
 const keycloakAuthService = new KeycloakAuthService();
 keycloakAuthService.doAuth();
+
+const firebaseService = new FirebaseService();
+firebaseService.attachListener();
 
 const PORT = process.env.PORT || 8000;
 const app = express();

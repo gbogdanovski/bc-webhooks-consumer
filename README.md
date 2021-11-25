@@ -1,15 +1,41 @@
-# Bigcommerce Webhooks Consumer APP
+# BigCommerce Webhooks Consumer APP
 
-Its a NodeJS app that will receive BC webhooks payload, validates it and sends it to AEC via Kafka topic and CIDP.
+## **Description**
 
-### - Requirements:
+NodeJS application written with TypeScript ready for Docker and Google Cloud Run, made for consuming BigCommerce webhooks events.
+
+After receiving payload from BC, application will validate that payload by checking the custom header value against Firestore db.
+This custom header value is set by the [BigCommerce-App](https://github.com/Attraqt/bigcommerce-app) and stored in Firestore db upon enabling webhooks for some BC store.
+
+If the payload is valid the process proceeds to identifying the origin of the webhook event and from there, based on the origin of the event, it decides to which endpoint that payload will be send.
+There are 2 endpoints that will receive data from this app:
+
+- CIDP; if the webhook event is of origin `inventory`
+- AEC Realtime Consumer; via KONG endpoint if the webhook event if different of `inventory`
+
+This decision is made in the controller of the app called [bcWebhooksConsumerController](src\controllers\bc-webhooks-consumer.controller.ts) in the function called `payloadRouter`
+
+## **App Flow**
+
+With initialization, the app will:
+
+- [start listening and accepting POST events on one endpoint](src\server.ts) - [{domain}/api/bc-webhooks-consumer](src\controllers\bc-webhooks-consumer.controller.ts),
+- [it will start another process which will get access token from keycloak and it will keep it fresh by getting new one 5 seconds before the previous one expires](src\core\services\KeyCloakAuthService.ts)
+- [and attach lister on firestore db to a specific collection changes.](src\core\services\FirebaseService.ts)
+
+The token will be used for sending data to both CIDP and KONG.
+
+After receiving data from BC webhook, the app will get the shops from
+
+## **Requirements:**
 
 - Firebase on Google Cloud or local running emulator
+  - [install firebase on your local](https://firebase.google.com/docs/cli#install_the_firebase_cli)
 - Keycloak credentials for getting access token used for sending data to CIDP
-- NgRok for exposing https endpoint from your local running instance
+  - [install keycloak instance on your local](https://www.keycloak.org/getting-started/getting-started-docker)
+- [Ngrok](https://ngrok.com/download) for exposing https endpoint from your local running instance
+- Local running [Docker](https://www.docker.com/products/docker-desktop) instance
 - No operating system dependencies
-
-## Description
 
 start ngrok: `ngrok http 8000`
 start local firebase emulator: `firebase emulators:start --project bc-webhooks-consumer --import=./firestore_data --export-on-exit`

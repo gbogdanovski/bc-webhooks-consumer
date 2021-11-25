@@ -21,7 +21,7 @@ export class FirebaseService {
     }
     private static instance: FirebaseService = new FirebaseService(); //singleton instance
     private db!: FirebaseFirestore.Firestore;
-    public shopWebhooksData: ShopModel[] = [];
+    public shopWebhooksData?: ShopModel[];
     private collectionName = 'shops';
 
     /**
