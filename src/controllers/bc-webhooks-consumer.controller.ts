@@ -1,14 +1,15 @@
 import express, { Request, Response } from "express";
 import config from "../core/common/config";
 import { extractWebhookData } from "../core/common/utils";
+import { AecRealtimeConsumerModel } from "../core/models/aec-realtime-consumer.model";
 import { BcWebhookBaseModel } from "../core/models/bc-webhook-base.model";
 import { BcWebhookConfig } from "../core/models/bc-webhook-config.model";
 import { FirebaseService } from "../core/services/FirebaseService";
-import { KeycloakAuthService } from "../core/services/KeyCloakAuthService";
+import { PayloadShipper } from "../core/services/PayloadShipper";
 
 export const bcWebhooksConsumerController = express.Router();
 const firebaseService = new FirebaseService();
-const keycloakAuthService = new KeycloakAuthService();
+const payloadShipper = new PayloadShipper();
 
 bcWebhooksConsumerController.post("/", async (req: Request, res: Response) => {
     try {
@@ -30,8 +31,10 @@ const validateWebhookData = async (req: Request) => {
     const isValidShop = (firebaseService.shopWebhooksData ?? await firebaseService.getShops()).find(x => x.webhooksToken === aecHeaderValue && x.storeHash === idPayload.storeHash)
 
     if (isValidShop) {
+        idPayload.tenantId = String(isValidShop.tenantId);
         payloadRouter(webhookPayload, idPayload);
-        return { isValidShop, webhookPayload, idPayload: idPayload };
+        //return { isValidShop, webhookPayload, idPayload: idPayload };
+        return true;
     }
     else {
         console.log("Invalid token");
@@ -41,11 +44,22 @@ const validateWebhookData = async (req: Request) => {
 
 const payloadRouter = async (webhookPayload: BcWebhookBaseModel, idPayload: BcWebhookConfig) => {
 
+    const payload = {
+        customer: {
+            provider: "BigCommerce",
+            storeHash: idPayload.storeHash,
+            tenantId: idPayload.tenantId,
+        },
+        data: webhookPayload,
+    } as AecRealtimeConsumerModel;
+
     if (idPayload.isInventoryEvent) {
-        console.log("send Inventory event to CIDP");
+        console.log("send Inventory event to CIDP", payload);
+        payloadShipper.ShipToCidp(payload);
     }
     else {
-        console.log("send event to AEC");
+        payloadShipper.ShipToAec(payload);
+        console.log("send event to AEC", payload);
     }
-    console.log(keycloakAuthService.keycloakToken?.expires_in);
 }
+

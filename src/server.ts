@@ -24,3 +24,8 @@ app.use(errorHandlerMiddleware);
 app.listen(PORT, () => {
     console.log(`Listening on port ${PORT}`);
 });
+
+process.on('SIGTERM', function () {
+    console.log('received SIGTERM, exiting gracefully');
+    process.exit(0);
+});

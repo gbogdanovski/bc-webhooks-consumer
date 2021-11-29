@@ -44,8 +44,10 @@ export class KeycloakAuthService {
             this.keycloakToken!.isTokenValid = false;
             const kcToken = await this.getToken();
             if (kcToken) {
-                console.log("Keycloak token refreshed");
                 this.keepTokenAlive();
+            }
+            else {
+                console.log("Keycloak token was not refreshed");
             }
         }, (Number(this.keycloakToken?.expires_in) - 5) * 1000);
     }

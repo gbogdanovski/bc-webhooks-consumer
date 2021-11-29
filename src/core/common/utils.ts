@@ -9,6 +9,6 @@ export const extractWebhookData = (webhookPayload: BcWebhookBaseModel): BcWebhoo
         scopeType: scopeType,
         storeHash: storeHash,
         isInventoryEvent: splitScope.some(x => x.toLowerCase() === "inventory"),
-        isSkuEvent: splitScope.some(x => x.toLowerCase() === "sku")
+        isSkuEvent: splitScope.some(x => x.toLowerCase() === "sku"),
     } as BcWebhookConfig;
 }

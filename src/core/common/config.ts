@@ -6,4 +6,6 @@ export default {
     keycloakUrl: process.env.KEYCLOAK_URL,
     keycloakClientId: process.env.KEYCLOAK_CLIENT_ID,
     keycloakClientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
+    kongUrl: process.env.KONG_URL,
+    cidpUrl: process.env.CIDP_URL,
 }

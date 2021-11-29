@@ -34,14 +34,7 @@ export class FirebaseService {
             if (result === undefined) {
                 return Promise.reject(`Shops were not found`);
             }
-            this.shopWebhooksData = result?.map((x) => {
-                return {
-                    webhooksEnabled: x.webhooksEnabled,
-                    storeHash: x.storeHash,
-                    webhooksToken: x.webhooksToken
-                };
-            });
-            return this.shopWebhooksData;
+            return this.populateShopsData(result);
         }, (error) => {
             console.error("Firebase collection listener error: " + error);
         });
@@ -57,23 +50,27 @@ export class FirebaseService {
         if (result === undefined) {
             return Promise.reject(`Shops were not found`);
         }
-        this.shopWebhooksData = result?.map((x) => {
-            return {
-                webhooksEnabled: x.webhooksEnabled,
-                storeHash: x.storeHash,
-                webhooksToken: x.webhooksToken
-            };
-        });
-        return this.shopWebhooksData;
+        return this.populateShopsData(result);
     }
 
-    async getShop(shopName: string) {
+    async getShop(shopName: string): Promise<ShopModel> {
         const snapshot = await this.db.collection(this.collectionName).doc(shopName).get();
         const result = snapshot?.data();
         if (result === undefined) {
             return Promise.reject(`Shop ${shopName} was not found`);
         }
         return result as ShopModel;
+    }
+
+    private populateShopsData(items: FirebaseFirestore.DocumentData[]): ShopModel[] {
+        return this.shopWebhooksData = items.map((x) => {
+            return {
+                webhooksEnabled: x.webhooksEnabled,
+                storeHash: x.storeHash,
+                webhooksToken: x.webhooksToken,
+                tenantId: x.tenantId
+            };
+        });
     }
 }
 
