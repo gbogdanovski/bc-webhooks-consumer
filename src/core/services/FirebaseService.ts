@@ -68,7 +68,10 @@ export class FirebaseService {
                 webhooksEnabled: x.webhooksEnabled,
                 storeHash: x.storeHash,
                 webhooksToken: x.webhooksToken,
-                tenantId: x.tenantId
+                tenantId: x.tenantId,
+                tenantName: x.tenantName,
+                tenantEnvName: x.tenantEnvName,
+                provider: 'BigCommerce',
             };
         });
     }

@@ -1,10 +1,7 @@
 import { BcWebhookBaseModel } from "./bc-webhook-base.model";
+import { ShopModel } from "./shop.model";
 
 export interface AecRealtimeConsumerModel {
-    customer: {
-        provider: string,
-        storeHash: string,
-        tenantId: string,
-    };
-    data: BcWebhookBaseModel;
+    customer: ShopModel;
+    data: BcWebhookBaseModel<any>;
 }

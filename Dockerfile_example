@@ -15,8 +15,9 @@ ENV WEBHOOK_CUSTOM_HEADER_NAME="Attraqt-Access-Token"
 # KONG api url
 ENV KONG_URL=""
 
-# CIDP api url
+# CIDP api url http://items-dev.attraqt.io/items or http://items.attraqt.io/items depending on the environment
 ENV CIDP_URL=""
+
 
 ENV KEYCLOAK_URL=""
 ENV KEYCLOAK_CLIENT_ID=""

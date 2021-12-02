@@ -4,6 +4,7 @@ import { extractWebhookData } from "../core/common/utils";
 import { AecRealtimeConsumerModel } from "../core/models/aec-realtime-consumer.model";
 import { BcWebhookBaseModel } from "../core/models/bc-webhook-base.model";
 import { BcWebhookConfig } from "../core/models/bc-webhook-config.model";
+import { ShopModel } from "../core/models/shop.model";
 import { FirebaseService } from "../core/services/FirebaseService";
 import { PayloadShipper } from "../core/services/PayloadShipper";
 
@@ -21,19 +22,18 @@ bcWebhooksConsumerController.post("/", async (req: Request, res: Response) => {
 });
 
 const validateWebhookData = async (req: Request) => {
-    const webhookPayload: BcWebhookBaseModel = req.body;
+    const webhookPayload: BcWebhookBaseModel<any> = req.body;
 
     const aecHeaderValue = req.headers[String(config.webhookCustomHeaderName).toLowerCase()];
     if (!aecHeaderValue) throw new Error("No AEC header found in request");
 
     const idPayload = extractWebhookData(webhookPayload);
 
-    const isValidShop = (firebaseService.shopWebhooksData ?? await firebaseService.getShops()).find(x => x.webhooksToken === aecHeaderValue && x.storeHash === idPayload.storeHash)
+    const isValidShop = (firebaseService.shopWebhooksData ?? await firebaseService.getShops()).find(x => x.webhooksToken === aecHeaderValue && x.storeHash === idPayload.storeHash);
 
     if (isValidShop) {
         idPayload.tenantId = String(isValidShop.tenantId);
-        payloadRouter(webhookPayload, idPayload);
-        //return { isValidShop, webhookPayload, idPayload: idPayload };
+        payloadRouter(webhookPayload, idPayload, isValidShop);
         return true;
     }
     else {
@@ -42,24 +42,14 @@ const validateWebhookData = async (req: Request) => {
     }
 }
 
-const payloadRouter = async (webhookPayload: BcWebhookBaseModel, idPayload: BcWebhookConfig) => {
 
-    const payload = {
-        customer: {
-            provider: "BigCommerce",
-            storeHash: idPayload.storeHash,
-            tenantId: idPayload.tenantId,
-        },
-        data: webhookPayload,
-    } as AecRealtimeConsumerModel;
-
-    if (idPayload.isInventoryEvent) {
-        console.log("send Inventory event to CIDP", payload);
-        payloadShipper.ShipToCidp(payload);
+const payloadRouter = async (webhookPayload: BcWebhookBaseModel<any>, idPayload: BcWebhookConfig, shop: ShopModel) => {
+    if (idPayload.isProductInventoryEvent || idPayload.isSkuInventoryEvent) {
+        console.log("send Inventory event to CIDP", idPayload);
+        payloadShipper.PreparePayloadForCidp(webhookPayload, idPayload, shop);
     }
     else {
-        payloadShipper.ShipToAec(payload);
-        console.log("send event to AEC", payload);
+        payloadShipper.ShipToAec({ customer: shop, data: webhookPayload });
     }
 }
 
