@@ -90,5 +90,4 @@ export class PayloadShipper {
             console.error('Sending payload to CIDP failed', { error, payload: payload });
         }
     }
-
 }
