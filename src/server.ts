@@ -4,8 +4,8 @@ import helmet from "helmet";
 import { bcWebhooksConsumerController } from "./controllers/bc-webhooks-consumer.controller";
 import { errorHandlerMiddleware } from "./core/middleware/error.middleware";
 import { testController } from "./controllers/test.controller";
-import { KeycloakAuthService } from "./core/services/KeyCloakAuthService";
-import { FirebaseService } from "./core/services/FirebaseService";
+import { KeycloakAuthService } from "./core/services/keycloak-auth.service";
+import { FirebaseService } from "./core/services/firebase.service";
 
 const keycloakAuthService = new KeycloakAuthService();
 keycloakAuthService.doAuth();

@@ -3,5 +3,5 @@ import { ShopModel } from "./shop.model";
 
 export interface AecRealtimeConsumerModel {
     customer: ShopModel;
-    data: BcWebhookBaseModel<any>;
+    data: BcWebhookBaseModel;
 }
