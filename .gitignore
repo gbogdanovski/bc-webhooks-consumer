@@ -3,7 +3,7 @@ node_modules
 package-lock.json
 src/core/common/config.ts
 serviceAccountKey.json
-firestore-debug.log
+firebase-debug.log
 ui-debug.log
 dist
 Dockerfile
