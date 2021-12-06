@@ -22,3 +22,8 @@ ENV CIDP_URL=""
 ENV KEYCLOAK_URL=""
 ENV KEYCLOAK_CLIENT_ID=""
 ENV KEYCLOAK_CLIENT_SECRET=""
+
+# If we want to keep track of the failed payload shipping attempts, we need to set this flag to true.
+ENV ENABLE_PAYLOAD_LEDGER=false
+# If payload ledger is enabled, we need to set the retry interval in miliseconds.
+ENV PAYLOAD_LEDGER_RESHIP_TIMEOUT=5000

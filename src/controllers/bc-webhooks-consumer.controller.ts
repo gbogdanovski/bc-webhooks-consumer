@@ -16,6 +16,7 @@ bcWebhooksConsumerController.post("/", async (req: Request, res: Response) => {
 
         const webhookPayload: BcWebhookBaseModel = req.body;
         const validationResult = await payloadValidator.ValidateAndRouteWebhookData(webhookPayload, String(aecHeaderValue));
+
         res.status(200).send(validationResult);
 
     } catch (e: any) {

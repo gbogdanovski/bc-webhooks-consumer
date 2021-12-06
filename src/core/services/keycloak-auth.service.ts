@@ -40,16 +40,11 @@ export class KeycloakAuthService {
      * If new access token request pass, the function will call itself again.
      */
     private keepTokenAlive() {
-        setTimeout(async () => {
+        setInterval(async () => {
             this.keycloakToken!.isTokenValid = false;
-            const kcToken = await this.getToken();
-            if (kcToken) {
-                this.keepTokenAlive();
-            }
-            else {
-                console.log("Keycloak token was not refreshed");
-            }
-        }, (Number(this.keycloakToken?.expires_in) - 5) * 1000);
+            await this.getToken();
+            console.log("Keycloak token was refreshed");
+        }, (Number(this.keycloakToken?.expires_in) - Number(config.refreshTokenBeforeExpiresInSeconds)) * 1000);
     }
 
     private async getToken(): Promise<KeyCloakTokenModel | undefined> {

@@ -21,3 +21,12 @@ ENV CIDP_URL=""
 ENV KEYCLOAK_URL=""
 ENV KEYCLOAK_CLIENT_ID=""
 ENV KEYCLOAK_CLIENT_SECRET=""
+
+# Subtract seconds from token expiration time and get new token.
+# Ex. Token Expires in 60 seconds, subtract 5 seconds from 60 and every 55 seconds get new token.
+ENV REFRESH_TOKEN_BEFORE_EXPIRES_IN_SECONDS=5
+
+# If we want to keep track of the failed payload shipping attempts, we need to set this flag to true.
+ENV ENABLE_PAYLOAD_LEDGER=true
+# If payload ledger is enabled, we need to set the retry interval in seconds.
+ENV PAYLOAD_LEDGER_RESHIP_TIMEOUT_IN_SECONDS=5

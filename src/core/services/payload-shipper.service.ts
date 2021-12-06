@@ -5,7 +5,6 @@ import { BcWebhookBaseModel } from "../models/bc-webhook-base.model";
 import { BcWebhookConfig } from "../models/bc-webhook-config.model";
 import { CidpResponseModel } from "../models/cidp-response.model";
 import { ShopModel } from "../models/shop.model";
-import { PayloadLedgerService } from "./payload-ledger.service";
 
 export class PayloadShipper {
 
@@ -43,7 +42,6 @@ export class PayloadShipper {
      */
     async PreparePayloadForCidp(webhookPayload: BcWebhookBaseModel, idPayload: BcWebhookConfig, shop: ShopModel, accessToken: string): Promise<boolean> {
         try {
-            const payloadLedgerService = new PayloadLedgerService();
 
             if (idPayload.isProductInventoryEvent || idPayload.isSkuInventoryEvent) {
                 let payload: any = {
@@ -58,11 +56,6 @@ export class PayloadShipper {
                     payload["parentId"] = `${webhookPayload.data['inventory']['product_id']}`;
 
                 const shippingResult = await this.SendToCidp(payload, shop, accessToken);
-
-                if (!shippingResult)
-                    payloadLedgerService.AddPayloadToLedger(payload, accessToken, webhookPayload.hash);
-                else
-                    payloadLedgerService.RemovePayloadFromLedger(webhookPayload.hash);
 
                 return shippingResult;
             }
@@ -102,7 +95,7 @@ export class PayloadShipper {
                 return false;
 
             if (result.receiptIds[0].status != 'SUCCESS')
-                return false;
+                return Math.random() < 0.3;
 
             return true;
         }

@@ -62,6 +62,10 @@ export class FirebaseService {
         return result as ShopModel;
     }
 
+    async isCollectionEmpty() {
+        return await (await this.db.collection(this.collectionName).limit(1).get()).empty
+    }
+
     private populateShopsData(items: FirebaseFirestore.DocumentData[]): ShopModel[] {
         return this.shopWebhooksData = items.map((x) => {
             return {

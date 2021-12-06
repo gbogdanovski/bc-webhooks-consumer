@@ -4,6 +4,7 @@ import config from "../common/config";
 import { extractWebhookData } from "../common/utils";
 import { BcWebhookBaseModel } from "../models/bc-webhook-base.model";
 import { PayloadShipper } from "./payload-shipper.service";
+import { PayloadLedgerService } from "./payload-ledger.service";
 
 export class PayloadValidator {
 
@@ -30,23 +31,35 @@ export class PayloadValidator {
             idPayload.tenantId = String(isValidShop.tenantId);
 
             const payloadShipper = new PayloadShipper();
+            let payloadShipperResult: boolean;
+
             if (idPayload.isProductInventoryEvent || idPayload.isSkuInventoryEvent) {
                 if (!config.cidpUrl)
                     throw new Error("ENV variable CIDP_URL is empty. Payload wont be shipped to CIDP.");
 
-                return payloadShipper.PreparePayloadForCidp(webhookPayload, idPayload, isValidShop, String(keycloakAuthService.keycloakToken.access_token));
+                payloadShipperResult = await payloadShipper.PreparePayloadForCidp(webhookPayload, idPayload, isValidShop, String(keycloakAuthService.keycloakToken.access_token));
             }
             else {
                 if (!config.kongUrl)
                     throw new Error("ENV variable KONG_URL is empty. Payload wont be shipped to AEC.");
 
-                return payloadShipper.ShipToAec({ customer: isValidShop, data: webhookPayload }, String(keycloakAuthService.keycloakToken.access_token));
+                payloadShipperResult = await payloadShipper.ShipToAec({ customer: isValidShop, data: webhookPayload }, String(keycloakAuthService.keycloakToken.access_token));
             }
+
+            const payloadLedgerService = new PayloadLedgerService();
+
+            if (config.enablePayloadLedger) {
+                if (!payloadShipperResult)
+                    payloadLedgerService.AddPayloadToLedger(webhookPayload, String(aecHeaderValue), webhookPayload.hash);
+                else
+                    payloadLedgerService.RemovePayloadFromLedger(webhookPayload.hash);
+            }
+
+            return payloadShipperResult;
         }
         catch (error) {
             console.error('Payload validation failed', { error: error, payload: webhookPayload });
             return Promise.reject(`Payload validation failed ${error}`);
         }
     }
-
 }
